@@ -5,25 +5,23 @@
 package dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
-/**
- *
- * @author phath
- */
+
 public class DBConnect {
-    private static String DB_URL = "jdbc:mysql://localhost:3306/qlhv";
-    private static String USER_NAME = "root";
-    private static String PASSWORD = "";
-    
-    public static void main(String[] args){
-        try{
-            Class.forName("com.mysql.jdbc.Drive");
-            Connection cons = DriverManager.getConnection("DB_URl, USER_NAME,PASSWORD);
-            if(con != null){
-                System.out.println("ket noi thanh cong");
-            }
-        }catch (Exception ex){
-            System.err.println("loi ket noi"+ ex.getMessage);
-            ex.printStackTrace();
+
+    public static Connection getConnection() {
+        Connection cons = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            cons = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/db_qlhv", "root", "");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return cons;
     }
+
+    public static void main(String[] args) {
+        System.out.println(getConnection());
+    }
+    
 }

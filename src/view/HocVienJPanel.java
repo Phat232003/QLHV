@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package view;
-
+import controller.QuanLyHocVienController;
 /**
  *
  * @author phath
@@ -15,6 +15,9 @@ public class HocVienJPanel extends javax.swing.JPanel {
      */
     public HocVienJPanel() {
         initComponents();
+        QuanLyHocVienController controller = new QuanLyHocVienController(
+                jpnView, btnAdd, jtfSearch);
+        controller.setDataToTable();
     }
 
     /**
