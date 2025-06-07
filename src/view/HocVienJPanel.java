@@ -18,7 +18,9 @@ public class HocVienJPanel extends javax.swing.JPanel {
         QuanLyHocVienController controller = new QuanLyHocVienController(
                 jpnView, btnAdd, jtfSearch);
         controller.setDataToTable();
+        controller.setEvent();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

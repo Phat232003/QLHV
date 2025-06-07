@@ -1,12 +1,19 @@
 package controller;
 
 import model.HocVien;
+import java.text.Format;
+import java.text.ParseException;
+
 import service.HocVienService;
 import service.HocVienServiceImpl;
 import utility.ClassTableModel;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -20,6 +27,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import format.ClassFormat;
+import view.HocVienJFrame;
 /**
  *
  * @author TVD
@@ -89,6 +98,41 @@ public class QuanLyHocVienController {
         table.setRowHeight(50);
         table.validate();
         table.repaint();
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                   if (e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                          DefaultTableModel model = (DefaultTableModel) table.getModel();
+                          int selectedRowIndex = table.getSelectedRow();
+                          
+                          selectedRowIndex = table.convertRowIndexToModel(selectedRowIndex);
+
+                          HocVien hocVien = new HocVien();
+                          hocVien.setMa_hoc_vien((int) model.getValueAt(selectedRowIndex, 0));
+                          hocVien.setHo_ten(model.getValueAt(selectedRowIndex, 2).toString());
+                          try {
+							hocVien.setNgay_sinh(ClassFormat.convertDateToDateSql(
+							          ClassFormat.convertStringToDate(model.getValueAt(selectedRowIndex, 3).toString(), "dd/MM/yyyy")));
+						} catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+                          hocVien.setGioi_tinh(model.getValueAt(selectedRowIndex, 4).toString().equalsIgnoreCase("Nam"));
+                          hocVien.setSo_dien_thoai(model.getValueAt(selectedRowIndex, 5) != null
+                                  ? model.getValueAt(selectedRowIndex, 5).toString() : null);
+                          hocVien.setDia_chi(model.getValueAt(selectedRowIndex, 6) != null
+                                  ? model.getValueAt(selectedRowIndex, 6).toString() : null);
+                          hocVien.setTinh_trang((boolean) model.getValueAt(selectedRowIndex, 7));
+
+                          HocVienJFrame frame = new HocVienJFrame(hocVien);
+                          frame.setLocationRelativeTo(null);
+                          frame.setResizable(false);
+                          frame.setTitle("Thông tin học viên");
+                          frame.setVisible(true);
+                   }
+            }
+
+      });
         
         JScrollPane scroll = new JScrollPane();
         scroll.getViewport().add(table);
@@ -98,6 +142,36 @@ public class QuanLyHocVienController {
         jpnView.add(scroll);
         jpnView.validate();
         jpnView.repaint();
+        
+    }
+    public void setEvent() {
+    	btnAdd.addMouseListener(new MouseAdapter() {
+    		 @Override
+             public void mouseClicked(MouseEvent e) 
+    		 
+    		 {
+    			 new HocVienJFrame(new HocVien()).setVisible(true);
+    		 }
+    		   @Override
+               public void mousePressed(MouseEvent e) {
+               }
+
+               @Override
+               public void mouseReleased(MouseEvent e) {
+               }
+
+               @Override
+               public void mouseEntered(MouseEvent e) {
+                   btnAdd.setBackground(new Color(0, 200, 83));
+               }
+
+               @Override
+               public void mouseExited(MouseEvent e) {
+                   btnAdd.setBackground(new Color(100, 221, 23));
+               }
+			
+			
+		});
     }
 
 }
