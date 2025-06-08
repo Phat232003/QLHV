@@ -7,5 +7,6 @@ public interface HocVienService {
     
     public List<HocVien> getList();
     public int createOrUpdate(HocVien hocVien);
-    HocVien findById(int id) ;
+    public HocVien findById(int id) ;
+    public  int demHocVien();
 }

@@ -16,6 +16,7 @@ import view.HocVienJPanel;
 import view.KhoaHocJPanel;
 import view.TrangChuJPanel;
 import view.LopHocJPanel;
+import view.ThongKePanel;
 
 /**
  *
@@ -74,6 +75,9 @@ public class ChuyenManHinhController {
                     break;
                 case "LopHoc":
                     node = new LopHocJPanel();
+                    break;
+                case "ThongKe":
+                    node = new ThongKePanel();
                     break;
                 default:
                     node = new TrangChuJPanel();

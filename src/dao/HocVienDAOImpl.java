@@ -92,5 +92,29 @@ public class HocVienDAOImpl implements HocVienDAO {
 	    return null;
 	}
 
+	@Override
+	public int demHocVien() {
+		  int soLuong = 0;
+		    String sql = "SELECT COUNT(*) FROM hoc_vien";
+
+		    try {
+		        Connection cons = DBConnect.getConnection();
+		        PreparedStatement ps = cons.prepareStatement(sql);
+		        ResultSet rs = ps.executeQuery();
+
+		        if (rs.next()) {
+		            soLuong = rs.getInt(1);
+		        }
+
+		        rs.close();
+		        ps.close();
+		        cons.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+
+		    return soLuong;
+	}
+
 
 }

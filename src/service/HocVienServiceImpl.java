@@ -27,5 +27,11 @@ public class HocVienServiceImpl implements HocVienService {
 	    return hocVienDAO.findById(id);
 	}
 
+	@Override
+	public int demHocVien() {
+		// TODO Auto-generated method stub
+		return hocVienDAO.demHocVien();
+	}
+
 
 }

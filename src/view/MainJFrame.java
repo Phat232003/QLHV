@@ -6,6 +6,11 @@ package view;
 
 import bean.DanhMucBean;
 import controller.ChuyenManHinhController;
+import dao.HocVienDAO;
+import model.HocVien;
+import service.HocVienService;
+import service.HocVienServiceImpl;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +49,9 @@ public class MainJFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
+        
+    	
+    	
         jpnMenu = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
