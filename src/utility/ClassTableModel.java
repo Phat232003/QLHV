@@ -1,8 +1,11 @@
 package utility;
 
 import model.HocVien;
+import model.KhoaHoc;
+
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import java.util.Date;
 
 public class ClassTableModel {
 
@@ -38,5 +41,34 @@ public class ClassTableModel {
         }
         return dtm;
     }
+
+	
+	
+public DefaultTableModel setTableKhoaHoc(List<KhoaHoc> listItem, String[] listColumn) {
+    DefaultTableModel dtm = new DefaultTableModel() {
+        // Chặn không cho sửa các ô trong bảng
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
+    // Thêm cột vào model
+    dtm.setColumnIdentifiers(listColumn);
+
+    // Thêm từng dòng dữ liệu vào bảng
+    for (KhoaHoc khoaHoc : listItem) {
+        dtm.addRow(new Object[]{
+            khoaHoc.getMa_khoa_hoc(),
+            khoaHoc.getTen_khoa_hoc(),
+            khoaHoc.getMo_ta(),
+            khoaHoc.getNgay_bat_dau(),
+            khoaHoc.getNgay_ket_thuc(),
+            khoaHoc.isTinh_trang() ? 1 : 0
+        });
+    }
+
+    return dtm;
+}
 
 }
