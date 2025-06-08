@@ -2,6 +2,9 @@ package view;
 
 import javax.swing.JPanel;
 
+import controller.LopHocController;
+import controller.QuanLyLopHocController;
+
 public class LopHocJPanel extends JPanel {
 
 	/**
@@ -9,6 +12,11 @@ public class LopHocJPanel extends JPanel {
 	 */
 	public LopHocJPanel() {
 		initComponents();
+		QuanLyLopHocController controller=new QuanLyLopHocController(jpnView, btnAdd, jtfSearch);
+		controller.setDataToTable();
+		controller.setEvent();
+		
+		
 	}
 	
 

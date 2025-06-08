@@ -65,5 +65,32 @@ public class HocVienDAOImpl implements HocVienDAO {
 	        return 0;
 	 
 	}
+	@Override
+	public HocVien findById(int id) {
+	    Connection conn = DBConnect.getConnection();
+	    String sql = "SELECT * FROM hoc_vien WHERE ma_hoc_vien = ?";
+	    try {
+	        PreparedStatement ps = conn.prepareStatement(sql);
+	        ps.setInt(1, id);
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) {
+	            HocVien hv = new HocVien();
+	            hv.setMa_hoc_vien(rs.getInt("ma_hoc_vien"));
+	            hv.setHo_ten(rs.getString("ho_ten"));
+	            hv.setNgay_sinh(rs.getDate("ngay_sinh"));
+	            hv.setGioi_tinh(rs.getBoolean("gioi_tinh"));
+	            hv.setSo_dien_thoai(rs.getString("so_dien_thoai"));
+	            hv.setDia_chi(rs.getString("dia_chi"));
+	            hv.setTinh_trang(rs.getBoolean("tinh_trang"));
+	            return hv;
+	        }
+	        ps.close();
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return null;
+	}
+
 
 }

@@ -15,4 +15,5 @@ public interface KhoaHocService {
      public List<KhoaHoc> getList();
      
 	public int createOrUpdate(KhoaHoc khoaHoc);
+    public KhoaHoc findById(int id) ;
 }

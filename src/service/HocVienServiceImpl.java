@@ -22,5 +22,10 @@ public class HocVienServiceImpl implements HocVienService {
 	public int createOrUpdate(HocVien hocVien) {
 		return hocVienDAO.createOrUpdate(hocVien);
 	}
+	@Override
+	public HocVien findById(int id) {
+	    return hocVienDAO.findById(id);
+	}
+
 
 }

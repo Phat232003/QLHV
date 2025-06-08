@@ -83,4 +83,39 @@ public class KhoaHocDAOImpl implements KhoaHocDAO{
 	    }
 	    return result;
 	}
+
+@Override
+public KhoaHoc findById(int id) {
+    KhoaHoc khoaHoc = null;
+    Connection conn = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        conn = DBConnect.getConnection();
+        String sql = "SELECT * FROM khoa_hoc WHERE ma_khoa_hoc = ?";
+        ps = conn.prepareStatement(sql);
+        ps.setInt(1, id);
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+            khoaHoc = new KhoaHoc();
+            khoaHoc.setMa_khoa_hoc(rs.getInt("ma_khoa_hoc"));
+            khoaHoc.setTen_khoa_hoc(rs.getString("ten_khoa_hoc"));
+            khoaHoc.setMo_ta(rs.getString("mo_ta"));
+            khoaHoc.setNgay_bat_dau(rs.getDate("ngay_bat_dau"));
+            khoaHoc.setNgay_ket_thuc(rs.getDate("ngay_ket_thuc"));
+            khoaHoc.setTinh_trang(rs.getBoolean("tinh_trang"));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        try { if (rs != null) rs.close(); } catch (Exception e) {}
+        try { if (ps != null) ps.close(); } catch (Exception e) {}
+        try { if (conn != null) conn.close(); } catch (Exception e) {}
+    }
+
+    return khoaHoc;
+}
+
 }

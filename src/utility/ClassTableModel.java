@@ -2,6 +2,7 @@ package utility;
 
 import model.HocVien;
 import model.KhoaHoc;
+import model.LopHoc;
 
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -70,5 +71,28 @@ public DefaultTableModel setTableKhoaHoc(List<KhoaHoc> listItem, String[] listCo
 
     return dtm;
 }
+public DefaultTableModel setTableLopHoc(List<LopHoc> listItem, String[] listColumn) {
+    DefaultTableModel dtm = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
+    dtm.setColumnIdentifiers(listColumn);
+
+    for (LopHoc lopHoc : listItem) {
+        dtm.addRow(new Object[]{
+            lopHoc.getMa_lop_hoc(),
+            lopHoc.getMa_khoa_hoc(),
+            lopHoc.getMa_hoc_vien(),
+            lopHoc.getNgay_dang_ky(),
+            lopHoc.isTinh_trang() ? 1 : 0
+        });
+    }
+
+    return dtm;
+}
+
 
 }

@@ -29,5 +29,9 @@ public  class KhoaHocServiceImpl implements KhoaHocService{
 		// TODO Auto-generated method stub
 		return khoaHocDAO.createOrUpdate(khoaHoc);
 	}
+	   @Override
+	    public KhoaHoc findById(int id) {
+	        return khoaHocDAO.findById(id);
+	    }
 
 }
