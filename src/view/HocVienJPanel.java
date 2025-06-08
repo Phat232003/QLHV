@@ -15,6 +15,13 @@ public class HocVienJPanel extends javax.swing.JPanel {
      */
     public HocVienJPanel() {
         initComponents();
+<<<<<<< Updated upstream
+=======
+        QuanLyHocVienController controller = new QuanLyHocVienController(
+                jpnView, btnAdd, jtfSearch);
+        controller.setDataToTable();
+        controller.setEvent();
+>>>>>>> Stashed changes
     }
 
     /**
