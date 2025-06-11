@@ -93,6 +93,7 @@ public class LopHocController {
 
             if (result > 0) {
                 lblMsg.setText("Lưu thành công");
+                JOptionPane.showMessageDialog(null, "Lưu thông tin thành công!");
                 if (saveCallback != null) {
                     saveCallback.run();
                 }

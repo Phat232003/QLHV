@@ -66,7 +66,8 @@ public class KhoaHocController {
                     int id = khoaHocService.createOrUpdate(khoaHoc);
                     if (id > 0) {
                         jtfMaKhoaHoc.setText(String.valueOf(id));
-                        jlbMsg.setText("Lưu thành công!");
+//                        jlbMsg.setText("Lưu thành công!");
+                        JOptionPane.showMessageDialog(null, "Lưu thông tin thành công!");
 
                         // ✅ Gọi callback nếu có
                         if (saveCallback != null) {
