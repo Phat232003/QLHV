@@ -4,6 +4,7 @@ import model.LopHoc;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,4 +66,24 @@ public class LopHocDAOImpl implements LopHocDAO {
         }
         return 0;
     }
+     @Override
+    public boolean delete(int id) {
+        Connection cons = DBConnect.getConnection();
+        String sql = "DELETE FROM lop_hoc WHERE ma_lop_hoc = ?";
+        try {
+            PreparedStatement ps = cons.prepareStatement(sql);
+            ps.setInt(1, id);
+            int rowsAffected = ps.executeUpdate();
+            
+            ps.close();
+            cons.close();
+            
+            return rowsAffected > 0;  // Return true if at least one row was affected (i.e., deletion succeeded)
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;  // Return false if the deletion failed
+    }
+
+    
 }

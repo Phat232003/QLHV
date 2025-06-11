@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package view;
-
+import controller.*;
 /**
  *
  * @author phath
@@ -15,6 +15,9 @@ public class TrangChuJPanel extends javax.swing.JPanel {
      */
     public TrangChuJPanel() {
         initComponents();
+        TrangChuController controller = new TrangChuController(jLabel2, jLabel4, jLabel6);
+        controller.setData();
+
     }
 
     /**
@@ -40,7 +43,7 @@ public class TrangChuJPanel extends javax.swing.JPanel {
 
         jLabel1.setText("Khóa Học");
 
-        jLabel2.setText("100");
+//        jLabel2.setText("100");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -67,7 +70,7 @@ public class TrangChuJPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Học Viên");
 
-        jLabel4.setText("100");
+//        jLabel4.setText("100");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -92,9 +95,9 @@ public class TrangChuJPanel extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(102, 255, 204));
 
-        jLabel5.setText("Hộp Thư");
+        jLabel5.setText("lớp học");
 
-        jLabel6.setText("100");
+//        jLabel6.setText("100");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);

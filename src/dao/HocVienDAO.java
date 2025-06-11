@@ -4,10 +4,9 @@ import model.HocVien;
 import java.util.List;
 
 public interface HocVienDAO {
-
-    public List<HocVien> getList();
-    public int createOrUpdate(HocVien hocVien);
-     public HocVien findById(int id);
-     public int demHocVien();
-
+    List<HocVien> getList();
+    int createOrUpdate(HocVien hocVien);
+    HocVien findById(int id);
+    boolean delete(int id);
+    // Nếu có thêm các phương thức khác thì cũng khai báo ở đây
 }

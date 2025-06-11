@@ -4,6 +4,7 @@
  */
 package qlhv;
 
+import view.DangNhapJDialog;
 import view.MainJFrame;
 
 /**
@@ -16,7 +17,11 @@ public class QLHV {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new MainJFrame().setVisible(true);
+        DangNhapJDialog dialog = new DangNhapJDialog(null, true);
+        dialog.setTitle("Đăng Nhập Hệ Thống");
+        dialog.setResizable(false);
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
     }
-    
+
 }

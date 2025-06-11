@@ -4,15 +4,9 @@ import com.toedter.calendar.JDateChooser;
 import model.LopHoc;
 import service.LopHocService;
 import service.LopHocServiceImpl;
-import service.HocVienService;
-import service.HocVienServiceImpl;
-import service.KhoaHocService;
-import service.KhoaHocServiceImpl;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Date;
+import java.util.Date;
 
 public class LopHocController {
 
@@ -22,89 +16,94 @@ public class LopHocController {
     private JTextField jtfMaHocVien;
     private JDateChooser jdcNgayDangKy;
     private JCheckBox jcbTinhTrang;
-    private JLabel jlbMsg;
+    private JLabel lblMsg;
 
-    private LopHoc lopHoc = null;
-    private LopHocService lopHocService = new LopHocServiceImpl();
-    private HocVienService hocVienService = new HocVienServiceImpl();
-    private KhoaHocService khoaHocService = new KhoaHocServiceImpl();
+    private LopHocService lopHocService;
 
-    public LopHocController(JButton btnSubmit,
-                            JTextField jtfMaLopHoc,
-                            JTextField jtfMaKhoaHoc,
-                            JTextField jtfMaHocVien,
-                            JDateChooser jdcNgayDangKy,
-                            JCheckBox jcbTinhTrang,
-                            JLabel jlbMsg) {
+    private Runnable saveCallback;
+
+    public LopHocController(
+            JButton btnSubmit,
+            JTextField jtfMaLopHoc,
+            JTextField jtfMaKhoaHoc,
+            JTextField jtfMaHocVien,
+            JDateChooser jdcNgayDangKy,
+            JCheckBox jcbTinhTrang,
+            JLabel lblMsg) {
+
         this.btnSubmit = btnSubmit;
         this.jtfMaLopHoc = jtfMaLopHoc;
         this.jtfMaKhoaHoc = jtfMaKhoaHoc;
         this.jtfMaHocVien = jtfMaHocVien;
         this.jdcNgayDangKy = jdcNgayDangKy;
         this.jcbTinhTrang = jcbTinhTrang;
-        this.jlbMsg = jlbMsg;
+        this.lblMsg = lblMsg;
 
-        this.btnSubmit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (jtfMaHocVien.getText().trim().isEmpty() ||
-                    jtfMaKhoaHoc.getText().trim().isEmpty() ||
-                    jdcNgayDangKy.getDate() == null) {
-                    jlbMsg.setText("Vui lòng nhập đầy đủ dữ liệu bắt buộc (*)");
-                    return;
-                }
+        this.lopHocService = new LopHocServiceImpl();
 
-                try {
-                    int maHocVien = Integer.parseInt(jtfMaHocVien.getText().trim());
-                    int maKhoaHoc = Integer.parseInt(jtfMaKhoaHoc.getText().trim());
-
-                    // Kiểm tra mã học viên
-                    if (hocVienService.findById(maHocVien) == null) {
-                        jlbMsg.setText("Học viên không tồn tại.");
-                        return;
-                    }
-
-                    // Kiểm tra mã khóa học
-                    if (khoaHocService.findById(maKhoaHoc) == null) {
-                        jlbMsg.setText("Khóa học không tồn tại.");
-                        return;
-                    }
-
-                    if (lopHoc == null) {
-                        lopHoc = new LopHoc();
-                    }
-
-                    lopHoc.setMa_lop_hoc(jtfMaLopHoc.getText().trim().isEmpty() ? 0 :
-                            Integer.parseInt(jtfMaLopHoc.getText().trim()));
-                    lopHoc.setMa_hoc_vien(maHocVien);
-                    lopHoc.setMa_khoa_hoc(maKhoaHoc);
-                    lopHoc.setNgay_dang_ky(new Date(jdcNgayDangKy.getDate().getTime()));
-                    lopHoc.setTinh_trang(jcbTinhTrang.isSelected());
-
-                    int id = lopHocService.createOrUpdate(lopHoc);
-                    if (id > 0) {
-                        jtfMaLopHoc.setText(String.valueOf(id));
-                        jlbMsg.setText("Lưu thành công!");
-                    } else {
-                        jlbMsg.setText("Lưu thất bại.");
-                    }
-
-                } catch (NumberFormatException nfe) {
-                    jlbMsg.setText("Mã học viên và mã khóa học phải là số.");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    jlbMsg.setText("Đã xảy ra lỗi khi lưu dữ liệu.");
-                }
-            }
-        });
+        setEvent();
     }
 
-    public void setView(LopHoc lh) {
-        this.lopHoc = lh;
-        jtfMaLopHoc.setText(lh.getMa_lop_hoc() != 0 ? String.valueOf(lh.getMa_lop_hoc()) : "");
-        jtfMaKhoaHoc.setText(String.valueOf(lh.getMa_khoa_hoc()));
-        jtfMaHocVien.setText(String.valueOf(lh.getMa_hoc_vien()));
-        jdcNgayDangKy.setDate(lh.getNgay_dang_ky());
-        jcbTinhTrang.setSelected(lh.isTinh_trang());
+    private void setEvent() {
+        btnSubmit.addActionListener(e -> saveLopHoc());
+    }
+
+    public void setView(LopHoc lopHoc) {
+        if (lopHoc == null) return;
+
+        jtfMaLopHoc.setText(String.valueOf(lopHoc.getMa_lop_hoc()));
+        jtfMaKhoaHoc.setText(String.valueOf(lopHoc.getMa_khoa_hoc()));
+        jtfMaHocVien.setText(String.valueOf(lopHoc.getMa_hoc_vien()));
+
+        Date ngayDangKy = lopHoc.getNgay_dang_ky();
+        if (ngayDangKy != null) {
+            jdcNgayDangKy.setDate(ngayDangKy);
+        } else {
+            jdcNgayDangKy.setDate(null);
+        }
+
+        jcbTinhTrang.setSelected(lopHoc.isTinh_trang());
+    }
+
+    public void setSaveCallback(Runnable callback) {
+        this.saveCallback = callback;
+    }
+
+    private void saveLopHoc() {
+        try {
+            int maLopHoc = Integer.parseInt(jtfMaLopHoc.getText().trim());
+            int maKhoaHoc = Integer.parseInt(jtfMaKhoaHoc.getText().trim());
+            int maHocVien = Integer.parseInt(jtfMaHocVien.getText().trim());
+            Date ngayDangKy = jdcNgayDangKy.getDate();
+            boolean tinhTrang = jcbTinhTrang.isSelected();
+
+            if (ngayDangKy == null) {
+                lblMsg.setText("Vui lòng chọn ngày đăng ký");
+                return;
+            }
+
+            LopHoc lopHoc = new LopHoc();
+            lopHoc.setMa_lop_hoc(maLopHoc);
+            lopHoc.setMa_khoa_hoc(maKhoaHoc);
+            lopHoc.setMa_hoc_vien(maHocVien);
+            lopHoc.setNgay_dang_ky(new java.sql.Date(ngayDangKy.getTime()));
+            lopHoc.setTinh_trang(tinhTrang);
+
+            int result = lopHocService.createOrUpdate(lopHoc);
+
+            if (result > 0) {
+                lblMsg.setText("Lưu thành công");
+                if (saveCallback != null) {
+                    saveCallback.run();
+                }
+            } else {
+                lblMsg.setText("Lưu thất bại");
+            }
+
+        } catch (NumberFormatException ex) {
+            lblMsg.setText("Mã lớp, khóa học, học viên phải là số");
+        } catch (Exception ex) {
+            lblMsg.setText("Lỗi: " + ex.getMessage());
+        }
     }
 }

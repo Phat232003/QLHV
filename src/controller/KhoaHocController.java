@@ -20,9 +20,12 @@ public class KhoaHocController {
     private JDateChooser jdcNgayKetThuc;
     private JCheckBox jcbTinhTrang;
     private JLabel jlbMsg;
-
+    
     private KhoaHoc khoaHoc = null;
     private KhoaHocService khoaHocService = null;
+
+    // ✅ Thêm callback
+    private Runnable saveCallback;
 
     public KhoaHocController(JButton btnSubmit,
                              JTextField jtfMaKhoaHoc,
@@ -46,7 +49,9 @@ public class KhoaHocController {
         this.btnSubmit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (jtfTenKhoaHoc.getText().trim().isEmpty() || jdcNgayBatDau.getDate() == null || jdcNgayKetThuc.getDate() == null) {
+                if (jtfTenKhoaHoc.getText().trim().isEmpty()
+                        || jdcNgayBatDau.getDate() == null
+                        || jdcNgayKetThuc.getDate() == null) {
                     jlbMsg.setText("Vui lòng nhập đầy đủ dữ liệu bắt buộc (*)");
                     return;
                 }
@@ -62,6 +67,11 @@ public class KhoaHocController {
                     if (id > 0) {
                         jtfMaKhoaHoc.setText(String.valueOf(id));
                         jlbMsg.setText("Lưu thành công!");
+
+                        // ✅ Gọi callback nếu có
+                        if (saveCallback != null) {
+                            saveCallback.run();
+                        }
                     } else {
                         jlbMsg.setText("Lưu thất bại.");
                     }
@@ -82,5 +92,10 @@ public class KhoaHocController {
         jdcNgayBatDau.setDate(kh.getNgay_bat_dau());
         jdcNgayKetThuc.setDate(kh.getNgay_ket_thuc());
         jcbTinhTrang.setSelected(kh.isTinh_trang());
+    }
+
+    // ✅ Setter cho callback
+    public void setSaveCallback(Runnable callback) {
+        this.saveCallback = callback;
     }
 }

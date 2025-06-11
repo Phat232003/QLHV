@@ -16,4 +16,5 @@ public interface KhoaHocService {
      
 	public int createOrUpdate(KhoaHoc khoaHoc);
     public KhoaHoc findById(int id) ;
+    boolean delete(int id);
 }

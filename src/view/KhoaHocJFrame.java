@@ -17,6 +17,10 @@ public class KhoaHocJFrame extends JFrame {
     private JCheckBox jcbTinhTrang;
     private JLabel jlbMsg;
     private JButton btnSubmit;
+    
+
+    // ✅ Thêm biến callback
+    private Runnable khoaHocControllerCallback;
 
     public KhoaHocJFrame() {
         initComponents();
@@ -35,11 +39,23 @@ public class KhoaHocJFrame extends JFrame {
                 jlbMsg
         );
         controller.setView(khoaHoc);
+
+        // ✅ Gọi callback sau khi lưu dữ liệu thành công
+        controller.setSaveCallback(() -> {
+            if (khoaHocControllerCallback != null) {
+                khoaHocControllerCallback.run();
+            }
+        });
+    }
+
+    // ✅ Thêm setter cho callback
+    public void setKhoaHocControllerCallback(Runnable callback) {
+        this.khoaHocControllerCallback = callback;
     }
 
     private void initComponents() {
         setTitle("Thông tin khóa học");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // ✅ Không dùng EXIT_ON_CLOSE
         setSize(700, 400);
         setLocationRelativeTo(null);
 
@@ -61,7 +77,7 @@ public class KhoaHocJFrame extends JFrame {
         jdcNgayKetThuc.setDateFormatString("dd/MM/yyyy");
         jcbTinhTrang = new JCheckBox("Kích hoạt");
 
-        // Row 1: Mã + Tên khóa học
+        // Form layout
         gbc.gridy = 0;
         gbc.gridx = 0; formPanel.add(new JLabel("Mã khóa học:"), gbc);
         gbc.gridx = 1; formPanel.add(jtfMaKhoaHoc, gbc);
@@ -69,42 +85,35 @@ public class KhoaHocJFrame extends JFrame {
         gbc.gridx = 3; formPanel.add(new JLabel("Tên khóa học:"), gbc);
         gbc.gridx = 4; formPanel.add(jtfTenKhoaHoc, gbc);
 
-        // Row 2: Mô tả
         gbc.gridy = 1;
         gbc.gridx = 0; formPanel.add(new JLabel("Mô tả:"), gbc);
         gbc.gridx = 1; gbc.gridwidth = 4; formPanel.add(scrollMoTa, gbc);
         gbc.gridwidth = 1;
 
-        // Row 3: Ngày bắt đầu
         gbc.gridy = 2;
         gbc.gridx = 0; formPanel.add(new JLabel("Ngày bắt đầu:"), gbc);
         gbc.gridx = 1; formPanel.add(jdcNgayBatDau, gbc);
         gbc.gridx = 2; formPanel.add(new JLabel("(*)"), gbc);
 
-        // Row 4: Ngày kết thúc
         gbc.gridy = 3;
         gbc.gridx = 0; formPanel.add(new JLabel("Ngày kết thúc:"), gbc);
         gbc.gridx = 1; formPanel.add(jdcNgayKetThuc, gbc);
         gbc.gridx = 2; formPanel.add(new JLabel("(*)"), gbc);
 
-        // Row 5: Tình trạng
         gbc.gridy = 4;
         gbc.gridx = 0; formPanel.add(new JLabel("Tình trạng:"), gbc);
         gbc.gridx = 1; formPanel.add(jcbTinhTrang, gbc);
 
-        // Row 6: chú thích
         gbc.gridy = 5;
         gbc.gridx = 0; gbc.gridwidth = 5;
         formPanel.add(new JLabel("<html><font color='red'>(*) Dữ liệu yêu cầu bắt buộc</font></html>"), gbc);
         gbc.gridwidth = 1;
 
-        // Row 7: Message label
         gbc.gridy = 6;
         jlbMsg = new JLabel();
         jlbMsg.setForeground(Color.RED);
         formPanel.add(jlbMsg, gbc);
 
-        // Submit button
         btnSubmit = new JButton("Lưu dữ liệu");
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnPanel.add(btnSubmit);

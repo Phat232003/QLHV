@@ -34,4 +34,10 @@ public  class KhoaHocServiceImpl implements KhoaHocService{
 	        return khoaHocDAO.findById(id);
 	    }
 
+    @Override
+    public boolean delete(int id) {
+        
+    return khoaHocDAO.delete(id);
+            }
+
 }

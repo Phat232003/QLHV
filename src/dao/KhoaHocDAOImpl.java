@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import model.KhoaHoc;
 
-public class KhoaHocDAOImpl implements KhoaHocDAO{
+public class KhoaHocDAOImpl implements KhoaHocDAO {
+
     @Override
     public List<KhoaHoc> getList() {
         Connection cons = DBConnect.getConnection(); // Không cần ép kiểu
@@ -35,87 +36,123 @@ public class KhoaHocDAOImpl implements KhoaHocDAO{
         }
         return list;
     }
-@Override
-	public int createOrUpdate(KhoaHoc khoaHoc) {
-		int result = 0;
-	    try {
-	        Connection cons = DBConnect.getConnection();
-	        String sql;
-	        PreparedStatement ps;
 
-	        if (khoaHoc.getMa_khoa_hoc() == 0) {
-	            // INSERT
-	            sql = "INSERT INTO khoa_hoc (ten_khoa_hoc, mo_ta, ngay_bat_dau, ngay_ket_thuc, tinh_trang) VALUES (?, ?, ?, ?, ?)";
-	            ps = cons.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-	            ps.setString(1, khoaHoc.getTen_khoa_hoc());
-	            ps.setString(2, khoaHoc.getMo_ta());
-	            ps.setDate(3, khoaHoc.getNgay_bat_dau());
-	            ps.setDate(4, khoaHoc.getNgay_ket_thuc());
-	            ps.setBoolean(5, khoaHoc.isTinh_trang());
+    @Override
+    public int createOrUpdate(KhoaHoc khoaHoc) {
+        int result = 0;
+        try {
+            Connection cons = DBConnect.getConnection();
+            String sql;
+            PreparedStatement ps;
 
-	            ps.executeUpdate();
-	            ResultSet rs = ps.getGeneratedKeys();
-	            if (rs.next()) {
-	                result = rs.getInt(1); // Trả về ID mới được tạo
-	            }
-	            rs.close();
-	        } else {
-	            // UPDATE
-	            sql = "UPDATE khoa_hoc SET ten_khoa_hoc = ?, mo_ta = ?, ngay_bat_dau = ?, ngay_ket_thuc = ?, tinh_trang = ? WHERE ma_khoa_hoc = ?";
-	            ps = cons.prepareStatement(sql);
-	            ps.setString(1, khoaHoc.getTen_khoa_hoc());
-	            ps.setString(2, khoaHoc.getMo_ta());
-	            ps.setDate(3, khoaHoc.getNgay_bat_dau());
-	            ps.setDate(4, khoaHoc.getNgay_ket_thuc());
-	            ps.setBoolean(5, khoaHoc.isTinh_trang());
-	            ps.setInt(6, khoaHoc.getMa_khoa_hoc());
+            if (khoaHoc.getMa_khoa_hoc() == 0) {
+                // INSERT
+                sql = "INSERT INTO khoa_hoc (ten_khoa_hoc, mo_ta, ngay_bat_dau, ngay_ket_thuc, tinh_trang) VALUES (?, ?, ?, ?, ?)";
+                ps = cons.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+                ps.setString(1, khoaHoc.getTen_khoa_hoc());
+                ps.setString(2, khoaHoc.getMo_ta());
+                ps.setDate(3, khoaHoc.getNgay_bat_dau());
+                ps.setDate(4, khoaHoc.getNgay_ket_thuc());
+                ps.setBoolean(5, khoaHoc.isTinh_trang());
 
-	            int rowsAffected = ps.executeUpdate();
-	            if (rowsAffected > 0) {
-	                result = khoaHoc.getMa_khoa_hoc(); // Trả về ID nếu update thành công
-	            }
-	        }
+                ps.executeUpdate();
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    result = rs.getInt(1); // Trả về ID mới được tạo
+                }
+                rs.close();
+            } else {
+                // UPDATE
+                sql = "UPDATE khoa_hoc SET ten_khoa_hoc = ?, mo_ta = ?, ngay_bat_dau = ?, ngay_ket_thuc = ?, tinh_trang = ? WHERE ma_khoa_hoc = ?";
+                ps = cons.prepareStatement(sql);
+                ps.setString(1, khoaHoc.getTen_khoa_hoc());
+                ps.setString(2, khoaHoc.getMo_ta());
+                ps.setDate(3, khoaHoc.getNgay_bat_dau());
+                ps.setDate(4, khoaHoc.getNgay_ket_thuc());
+                ps.setBoolean(5, khoaHoc.isTinh_trang());
+                ps.setInt(6, khoaHoc.getMa_khoa_hoc());
 
-	        ps.close();
-	        cons.close();
-	    } catch (SQLException ex) {
-	        ex.printStackTrace();
-	    }
-	    return result;
-	}
+                int rowsAffected = ps.executeUpdate();
+                if (rowsAffected > 0) {
+                    result = khoaHoc.getMa_khoa_hoc(); // Trả về ID nếu update thành công
+                }
+            }
 
-@Override
-public KhoaHoc findById(int id) {
-    KhoaHoc khoaHoc = null;
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-
-    try {
-        conn = DBConnect.getConnection();
-        String sql = "SELECT * FROM khoa_hoc WHERE ma_khoa_hoc = ?";
-        ps = conn.prepareStatement(sql);
-        ps.setInt(1, id);
-        rs = ps.executeQuery();
-
-        if (rs.next()) {
-            khoaHoc = new KhoaHoc();
-            khoaHoc.setMa_khoa_hoc(rs.getInt("ma_khoa_hoc"));
-            khoaHoc.setTen_khoa_hoc(rs.getString("ten_khoa_hoc"));
-            khoaHoc.setMo_ta(rs.getString("mo_ta"));
-            khoaHoc.setNgay_bat_dau(rs.getDate("ngay_bat_dau"));
-            khoaHoc.setNgay_ket_thuc(rs.getDate("ngay_ket_thuc"));
-            khoaHoc.setTinh_trang(rs.getBoolean("tinh_trang"));
+            ps.close();
+            cons.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        try { if (rs != null) rs.close(); } catch (Exception e) {}
-        try { if (ps != null) ps.close(); } catch (Exception e) {}
-        try { if (conn != null) conn.close(); } catch (Exception e) {}
+        return result;
     }
 
-    return khoaHoc;
+    @Override
+    public KhoaHoc findById(int id) {
+        KhoaHoc khoaHoc = null;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DBConnect.getConnection();
+            String sql = "SELECT * FROM khoa_hoc WHERE ma_khoa_hoc = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                khoaHoc = new KhoaHoc();
+                khoaHoc.setMa_khoa_hoc(rs.getInt("ma_khoa_hoc"));
+                khoaHoc.setTen_khoa_hoc(rs.getString("ten_khoa_hoc"));
+                khoaHoc.setMo_ta(rs.getString("mo_ta"));
+                khoaHoc.setNgay_bat_dau(rs.getDate("ngay_bat_dau"));
+                khoaHoc.setNgay_ket_thuc(rs.getDate("ngay_ket_thuc"));
+                khoaHoc.setTinh_trang(rs.getBoolean("tinh_trang"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return khoaHoc;
+    }
+        @Override
+    public boolean delete(int id) {
+        Connection cons = DBConnect.getConnection();
+        String sql = "DELETE FROM khoa_hoc WHERE ma_khoa_hoc = ?";
+        try {
+            PreparedStatement ps = cons.prepareStatement(sql);
+            ps.setInt(1, id);
+            int rowsAffected = ps.executeUpdate();
+            
+            ps.close();
+            cons.close();
+            
+            return rowsAffected > 0;  // Return true if at least one row was affected (i.e., deletion succeeded)
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;  // Return false if the deletion failed
+    }
+
+   
 }
 
-}
+

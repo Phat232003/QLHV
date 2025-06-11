@@ -18,7 +18,7 @@ public class HocVien {
     private Date ngay_sinh;
     private boolean gioi_tinh;
     private boolean tinh_trang;
-    
+
     public int getMa_hoc_vien() {
         return ma_hoc_vien;
     }
@@ -74,6 +74,9 @@ public class HocVien {
     public void setTinh_trang(boolean tinh_trang) {
         this.tinh_trang = tinh_trang;
     }
+
+
+
 
 
     

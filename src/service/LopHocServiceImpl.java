@@ -26,4 +26,9 @@ this.lopHocDAO=new LopHocDAOImpl();
 		return lopHocDAO.createOrUpdate( lopHoc);
 	}
 
+    @Override
+    public boolean delete(int id) {
+        return lopHocDAO.delete(id);
+    }
+
 }

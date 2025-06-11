@@ -3,6 +3,7 @@ package utility;
 import model.HocVien;
 import model.KhoaHoc;
 import model.LopHoc;
+import java.text.SimpleDateFormat;
 
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -47,25 +48,25 @@ public class ClassTableModel {
 	
 public DefaultTableModel setTableKhoaHoc(List<KhoaHoc> listItem, String[] listColumn) {
     DefaultTableModel dtm = new DefaultTableModel() {
-        // Chặn không cho sửa các ô trong bảng
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
         }
     };
 
-    // Thêm cột vào model
     dtm.setColumnIdentifiers(listColumn);
 
-    // Thêm từng dòng dữ liệu vào bảng
+    // Định dạng ngày
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
     for (KhoaHoc khoaHoc : listItem) {
         dtm.addRow(new Object[]{
             khoaHoc.getMa_khoa_hoc(),
             khoaHoc.getTen_khoa_hoc(),
             khoaHoc.getMo_ta(),
-            khoaHoc.getNgay_bat_dau(),
-            khoaHoc.getNgay_ket_thuc(),
-            khoaHoc.isTinh_trang() ? 1 : 0
+            sdf.format(khoaHoc.getNgay_bat_dau()),
+            sdf.format(khoaHoc.getNgay_ket_thuc()),
+            khoaHoc.isTinh_trang()
         });
     }
 

@@ -5,112 +5,95 @@ import controller.LopHocController;
 import model.LopHoc;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 public class LopHocJFrame extends JFrame {
 
-    private JPanel contentPane;
     private JTextField jtfMaLopHoc;
     private JTextField jtfMaKhoaHoc;
     private JTextField jtfMaHocVien;
     private JDateChooser jdcNgayDangKy;
     private JCheckBox jcbTinhTrang;
-    private JLabel jlbMsg;
     private JButton btnSubmit;
+    private JLabel lblMsg;
 
-    public LopHocJFrame() {
-        initComponents();
-    }
+    private LopHocController lopHocController;
+
+    // Callback để thông báo khi lưu thành công
+    private Runnable lopHocControllerCallback;
 
     public LopHocJFrame(LopHoc lopHoc) {
         initComponents();
-        LopHocController controller = new LopHocController(
+
+        lopHocController = new LopHocController(
                 btnSubmit,
                 jtfMaLopHoc,
                 jtfMaKhoaHoc,
                 jtfMaHocVien,
                 jdcNgayDangKy,
                 jcbTinhTrang,
-                jlbMsg
-        );
-        controller.setView(lopHoc);
+                lblMsg);
+
+        lopHocController.setView(lopHoc);
+
+        // Thiết lập sự kiện lưu dữ liệu, khi lưu thành công gọi callback để update bảng
+        lopHocController.setSaveCallback(() -> {
+            if (lopHocControllerCallback != null) {
+                lopHocControllerCallback.run();
+            }
+            this.dispose(); // đóng frame sau khi lưu thành công
+        });
     }
 
     private void initComponents() {
-        setTitle("Thông tin lớp học");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 350);
-        setLocationRelativeTo(null);
-
-        JPanel panel = new JPanel(new BorderLayout(10, 10));
-        JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Thông tin lớp học", TitledBorder.LEADING, TitledBorder.TOP));
-
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(400, 350);
+        setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.anchor = GridBagConstraints.WEST;
 
-        jtfMaLopHoc = new JTextField(15);
-        jtfMaKhoaHoc = new JTextField(15);
-        jtfMaHocVien = new JTextField(15);
+        jtfMaLopHoc = new JTextField(20);
+        jtfMaKhoaHoc = new JTextField(20);
+        jtfMaHocVien = new JTextField(20);
         jdcNgayDangKy = new JDateChooser();
-        jdcNgayDangKy.setDateFormatString("dd/MM/yyyy");
-        jcbTinhTrang = new JCheckBox("Kích hoạt");
+        jcbTinhTrang = new JCheckBox("Tình trạng");
+        btnSubmit = new JButton("Lưu");
+        lblMsg = new JLabel();
 
-        // Row 1
-        gbc.gridy = 0;
-        gbc.gridx = 0; formPanel.add(new JLabel("Mã lớp học:"), gbc);
-        gbc.gridx = 1; formPanel.add(jtfMaLopHoc, gbc);
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Row 2
-        gbc.gridy = 1;
-        gbc.gridx = 0; formPanel.add(new JLabel("Mã khóa học:"), gbc);
-        gbc.gridx = 1; formPanel.add(jtfMaKhoaHoc, gbc);
-        gbc.gridx = 2; formPanel.add(new JLabel("(*)"), gbc);
+        gbc.gridx = 0; gbc.gridy = 0;
+        add(new JLabel("Mã lớp học:"), gbc);
+        gbc.gridx = 1;
+        add(jtfMaLopHoc, gbc);
 
-        // Row 3
-        gbc.gridy = 2;
-        gbc.gridx = 0; formPanel.add(new JLabel("Mã học viên:"), gbc);
-        gbc.gridx = 1; formPanel.add(jtfMaHocVien, gbc);
-        gbc.gridx = 2; formPanel.add(new JLabel("(*)"), gbc);
+        gbc.gridx = 0; gbc.gridy++;
+        add(new JLabel("Mã khóa học:"), gbc);
+        gbc.gridx = 1;
+        add(jtfMaKhoaHoc, gbc);
 
-        // Row 4
-        gbc.gridy = 3;
-        gbc.gridx = 0; formPanel.add(new JLabel("Ngày đăng ký:"), gbc);
-        gbc.gridx = 1; formPanel.add(jdcNgayDangKy, gbc);
-        gbc.gridx = 2; formPanel.add(new JLabel("(*)"), gbc);
+        gbc.gridx = 0; gbc.gridy++;
+        add(new JLabel("Mã học viên:"), gbc);
+        gbc.gridx = 1;
+        add(jtfMaHocVien, gbc);
 
-        // Row 5
-        gbc.gridy = 4;
-        gbc.gridx = 0; formPanel.add(new JLabel("Tình trạng:"), gbc);
-        gbc.gridx = 1; formPanel.add(jcbTinhTrang, gbc);
+        gbc.gridx = 0; gbc.gridy++;
+        add(new JLabel("Ngày đăng ký:"), gbc);
+        gbc.gridx = 1;
+        add(jdcNgayDangKy, gbc);
 
-        // Row 6: note
-        gbc.gridy = 5;
-        gbc.gridx = 0;
-        gbc.gridwidth = 3;
-        formPanel.add(new JLabel("<html><font color='red'>(*) Dữ liệu bắt buộc</font></html>"), gbc);
+        gbc.gridx = 1; gbc.gridy++;
+        add(jcbTinhTrang, gbc);
 
-        // Row 7: message
-        gbc.gridy = 6;
-        jlbMsg = new JLabel();
-        jlbMsg.setForeground(Color.RED);
-        formPanel.add(jlbMsg, gbc);
+        gbc.gridx = 1; gbc.gridy++;
+        add(btnSubmit, gbc);
 
-        // Submit
-        btnSubmit = new JButton("Lưu dữ liệu");
-        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnPanel.add(btnSubmit);
-
-        panel.add(formPanel, BorderLayout.CENTER);
-        panel.add(btnPanel, BorderLayout.SOUTH);
-        add(panel);
+        gbc.gridx = 1; gbc.gridy++;
+        add(lblMsg, gbc);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new LopHocJFrame().setVisible(true);
-        });
+    // Hàm cho phép controller bên ngoài thiết lập callback
+    public void setLopHocControllerCallback(Runnable callback) {
+        this.lopHocControllerCallback = callback;
     }
 }
